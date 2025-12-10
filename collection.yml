@@ -1,0 +1,7 @@
+name: "dirty-vm"
+help: "Usage for dirty-vm"
+readme: "README.md"
+runnables: []
+  # - example_runnable
+environments:
+  COLLECTION_ENV: "value"
