@@ -1,7 +1,16 @@
 name: "dirty-vm"
-help: "Usage for dirty-vm"
+help: "Manages virtual machines created for dirty jobs"
 readme: "README.md"
-runnables: []
-  # - example_runnable
-environments:
-  COLLECTION_ENV: "value"
+runnables:
+  - setup
+  - images
+  - pull
+  - delete-image
+  - create
+  - list
+  - start
+  - stop
+  - delete
+  - run
+  - ssh
+  - forward

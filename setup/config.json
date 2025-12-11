@@ -1,0 +1,8 @@
+{
+    "images": {
+        "amd64": {
+            "ubuntu-noble": "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img",
+            "debian-trixie": "https://cdimage.debian.org/images/cloud/trixie/20251117-2299/debian-13-generic-amd64-20251117-2299.qcow2"
+        }
+    }
+}

@@ -1,0 +1,5 @@
+name: "setup"
+help: "creates workdir for dirty-vm, sets configuration file and creates ssh key for connections"
+readme: "README.md"
+run: "cp config.json ~/.dirty-vm/config.json && ssh-keygen -t ed25519 -f ~/.ssh/dirty-vm -N ''"
+before: type ssh-keygen && mkdir -p ~/.dirty-vm

@@ -1,0 +1,8 @@
+name: "delete"
+help: "Usage for delete"
+readme: "README.md"
+run: "echo 'Hello from delete'"
+# before: "echo 'Running before'"
+# after: "echo 'Running after'"
+environments:
+  RUNNABLE_ENV: "value"

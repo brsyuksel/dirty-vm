@@ -1,0 +1,5 @@
+name: "delete-image"
+help: "deletes downloaded image"
+readme: "README.md"
+run: ./main.py
+before: ./before.sh

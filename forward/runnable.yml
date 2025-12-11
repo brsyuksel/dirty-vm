@@ -1,0 +1,8 @@
+name: "forward"
+help: "Usage for forward"
+readme: "README.md"
+run: "echo 'Hello from forward'"
+# before: "echo 'Running before'"
+# after: "echo 'Running after'"
+environments:
+  RUNNABLE_ENV: "value"
