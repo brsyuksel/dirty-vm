@@ -30,7 +30,7 @@ if result.returncode != 0:
     sys.exit(1)
 
 file_size = os.path.getsize(target_file)
-file_size_mb = file_size / 1024 * 1024
+file_size_mb = file_size / (1024 * 1024)
 
 with open(os.path.join(dirty_vm_path, "images.json"), "r+", encoding="utf-8") as f:
     images = json.load(f)

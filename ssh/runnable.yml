@@ -1,8 +1,4 @@
 name: "ssh"
-help: "Usage for ssh"
+help: "ssh to virtual machine"
 readme: "README.md"
-run: "echo 'Hello from ssh'"
-# before: "echo 'Running before'"
-# after: "echo 'Running after'"
-environments:
-  RUNNABLE_ENV: "value"
+run: ./main.py

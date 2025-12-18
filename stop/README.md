@@ -1,3 +1,3 @@
 # stop
 
-Description for stop
+stops virtual machine

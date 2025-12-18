@@ -1,16 +1,6 @@
 name: "create"
-help: "Usage for create"
+help: "creates a new virtual machine"
 readme: "README.md"
-run: "echo 'Hello from create'"
-# before: "echo 'Running before'"
-# after: "echo 'Running after'"
-environments:
-  RUNNABLE_ENV: "value"
-
-# TODO
-# bridge, ip addr, iptables rules
-# dnsmasq, static ip config
-# cloud init: user data, metadata, cloud-init iso
-# mac addr - ip addr
-# qemu params
-# disk creation
+run: ./main.py
+before: ./before.py
+after: ./after.sh

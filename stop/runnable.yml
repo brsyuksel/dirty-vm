@@ -1,8 +1,4 @@
 name: "stop"
-help: "Usage for stop"
+help: "stops virtual machine"
 readme: "README.md"
-run: "echo 'Hello from stop'"
-# before: "echo 'Running before'"
-# after: "echo 'Running after'"
-environments:
-  RUNNABLE_ENV: "value"
+run: ./main.py

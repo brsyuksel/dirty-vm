@@ -1,3 +1,3 @@
 # list
 
-Description for list
+lists virtual machines
