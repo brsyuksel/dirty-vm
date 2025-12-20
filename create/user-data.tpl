@@ -9,7 +9,7 @@ users:
 
 hostname: ${vm_name}
 
-bootcmd:
+runcmd:
   - echo ${host_ip} dirty-vm.host >> /etc/hosts
 
 packages:
