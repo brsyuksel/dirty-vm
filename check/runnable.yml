@@ -1,0 +1,4 @@
+name: "check"
+help: "checks if required dependencies are installed"
+readme: "README.md"
+run: ./main.py

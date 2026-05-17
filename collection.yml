@@ -3,6 +3,7 @@ help: "Manages virtual machines created for dirty jobs"
 readme: "README.md"
 runnables:
   - setup
+  - check
   - images
   - pull
   - delete-image
