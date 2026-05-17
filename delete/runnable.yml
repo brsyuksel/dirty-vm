@@ -2,3 +2,4 @@ name: "delete"
 help: "deletes virtual machine"
 readme: "README.md"
 run: ./main.py
+before: ../check/validate.sh
