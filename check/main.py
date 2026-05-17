@@ -134,6 +134,15 @@ def main():
         missing_system.append("virbr0 bridge (created by start)")
     all_ok &= virbr0_ok
 
+    # Data Files
+    print("\nData Files:")
+    dirty_vm_json = os.path.join(os.path.expanduser("~/.dirty-vm"), "dirty-vm.json")
+    dirty_vm_json_ok = os.path.exists(dirty_vm_json)
+    print_result(dirty_vm_json_ok, "dirty-vm.json", "(state database)")
+    if not dirty_vm_json_ok:
+        missing_system.append("dirty-vm.json not found (run setup)")
+    all_ok &= dirty_vm_json_ok
+
     # Utilities
     print("\nUtilities:")
     mkisofs_ok = check_binary("mkisofs")
