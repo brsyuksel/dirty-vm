@@ -6,21 +6,19 @@ import json
 
 ARCH = "amd64"
 
-dirty_vm_path = os.path.expanduser("~/.dirty-vm")
+DIRTY_VM_PATH = os.path.expanduser("~/.dirty-vm")
+STATE_FILE = os.path.join(DIRTY_VM_PATH, "dirty-vm.json")
 
-with open(os.path.join(dirty_vm_path, "config.json")) as f:
-    config = json.load(f)
-
-with open(os.path.join(dirty_vm_path, "images.json")) as f:
-    images = json.load(f)
+with open(STATE_FILE, "r", encoding="utf-8") as f:
+    state = json.load(f)
 
 output = []
 
-for key in config["images"][ARCH].keys():
+for key in state.get("images", {}).get(ARCH, {}).keys():
     output.append({
         "name": key,
-        "downloaded": key in images,
-        "size": images.get(key, {}).get("size", "-")
+        "downloaded": key in state.get("pulled_images", {}),
+        "size": state.get("pulled_images", {}).get(key, {}).get("size", "-")
     })
 
 if len(output) == 0:

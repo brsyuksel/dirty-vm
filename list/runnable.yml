@@ -2,4 +2,4 @@ name: "list"
 help: "lists virtual machines"
 readme: "README.md"
 run: ./main.py
-before: ../check/validate.sh && ./before.sh
+before: ./before.sh

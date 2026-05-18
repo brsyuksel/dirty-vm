@@ -1,5 +1,7 @@
 #!/bin/bash
 
+../check/validate.sh
+
 echo 1 | sudo tee /proc/sys/net/ipv4/ip_forward > /dev/null
 
 get_default_interface() {
@@ -24,10 +26,6 @@ if ! ip link show $BRIDGE_NAME &> /dev/null; then
     sudo iptables -A FORWARD -i $BRIDGE_NAME -o $NAT_INTERFACE -j ACCEPT
     sudo iptables -t nat -A POSTROUTING -o $NAT_INTERFACE -j MASQUERADE
     sudo iptables -A FORWARD -i $NAT_INTERFACE -o $BRIDGE_NAME -m state --state RELATED,ESTABLISHED -j ACCEPT
-fi
-
-if [ ! -f ~/.dirty-vm/vms.json ]; then
-    echo "{}" > ~/.dirty-vm/vms.json
 fi
 
 DIRTY_VM_PATH="$HOME/.dirty-vm"

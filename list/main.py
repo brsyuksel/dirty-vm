@@ -5,11 +5,12 @@ import sys
 import json
 
 DIRTY_VM_PATH = os.path.expanduser("~/.dirty-vm")
+STATE_FILE = f"{DIRTY_VM_PATH}/dirty-vm.json"
 
-with open(f"{DIRTY_VM_PATH}/vms.json") as f:
-    vms = json.load(f)
+with open(STATE_FILE, "r", encoding="utf-8") as f:
+    state = json.load(f)
 
-virtual_machines = vms.get("virtual_machines", {})
+virtual_machines = state.get("virtual_machines", {})
 
 output = []
 

@@ -7,6 +7,7 @@ import getpass
 import subprocess
 
 DIRTY_VM_PATH = os.path.expanduser("~/.dirty-vm")
+STATE_FILE = f"{DIRTY_VM_PATH}/dirty-vm.json"
 
 if len(sys.argv) < 4:
     print("vm_name is required")
@@ -14,14 +15,14 @@ if len(sys.argv) < 4:
 
 name = sys.argv[1]
 
-with open(f"{DIRTY_VM_PATH}/vms.json") as f:
-    vms = json.load(f)
+with open(STATE_FILE, "r", encoding="utf-8") as f:
+    state = json.load(f)
 
-if name not in vms["virtual_machines"]:
+if name not in state["virtual_machines"]:
     print(f"virtual machine {name} not found")
     sys.exit(1)
 
-vm_ip = vms["virtual_machines"][name]["ip"]
+vm_ip = state["virtual_machines"][name]["ip"]
 
 vm_pid = f"{DIRTY_VM_PATH}/run/{name}.pid"
 

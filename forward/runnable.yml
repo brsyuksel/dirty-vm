@@ -2,4 +2,4 @@ name: "forward"
 help: "port forward to virtual machine's port"
 readme: "README.md"
 run: ./main.py
-before: ../check/validate.sh
+before: ./before.sh

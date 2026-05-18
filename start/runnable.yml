@@ -2,4 +2,4 @@ name: "start"
 help: "starts virtual machine"
 readme: "README.md"
 run: ./main.py
-before: ../check/validate.sh && ./before.sh
+before: ./before.sh

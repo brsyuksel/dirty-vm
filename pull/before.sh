@@ -1,9 +1,7 @@
 #!/bin/bash
 
-mkdir -p ~/.dirty-vm/images
+../check/validate.sh
 
-if [ ! -f ~/.dirty-vm/images.json ]; then
-    echo "{}" > ~/.dirty-vm/images.json
-fi
+mkdir -p ~/.dirty-vm/images
 
 type wget

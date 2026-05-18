@@ -6,6 +6,7 @@ import json
 import subprocess
 
 DIRTY_VM_PATH = os.path.expanduser("~/.dirty-vm")
+STATE_FILE = f"{DIRTY_VM_PATH}/dirty-vm.json"
 
 if len(sys.argv) < 2:
     print("vm_name is required")
@@ -13,14 +14,14 @@ if len(sys.argv) < 2:
 
 name = sys.argv[1]
 
-with open(f"{DIRTY_VM_PATH}/vms.json") as f:
-    vms = json.load(f)
+with open(STATE_FILE, "r", encoding="utf-8") as f:
+    state = json.load(f)
 
-if name not in vms["virtual_machines"]:
+if name not in state["virtual_machines"]:
     print(f"virtual machine {name} not found")
     sys.exit(1)
 
-vm = vms["virtual_machines"][name]
+vm = state["virtual_machines"][name]
 
 try:
     with open("/sys/devices/system/cpu/smt/active", "r") as f:

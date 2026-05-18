@@ -2,4 +2,4 @@ name: "pull"
 help: "downloads distro image"
 readme: "README.md"
 run: ./main.py
-before: ../check/validate.sh && ./before.sh
+before: ./before.sh
