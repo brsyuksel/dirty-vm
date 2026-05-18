@@ -6,8 +6,8 @@ import json
 import getpass
 import subprocess
 
-DIRTY_VM_PATH = os.path.expanduser("~/.dirty-vm")
-STATE_FILE = f"{DIRTY_VM_PATH}/dirty-vm.json"
+DIRTY_VM_PATH = os.path.expanduser(os.environ.get("DIRTY_VM_HOME", "~/.dirty-vm"))
+STATE_FILE = os.path.join(DIRTY_VM_PATH, "dirty-vm.json")
 
 if len(sys.argv) < 4:
     print("vm_name is required")
@@ -25,12 +25,13 @@ if vm is None:
 
 vm_ip = vm["ip"]
 
-vm_pid = f"{DIRTY_VM_PATH}/run/{name}.pid"
+vm_pid_file = os.path.join(DIRTY_VM_PATH, "run", f"{name}.pid")
 
-if not os.path.exists(vm_pid):
+if not os.path.exists(vm_pid_file):
     print("vm is not running")
     sys.exit(1)
 
 user_name = getpass.getuser()
-cmd = ["ssh", "-L", f"{local_port}:localhost:{vm_port}", "-i", "~/.ssh/dirty-vm", "-N", f"{user_name}@{vm_ip}"]
+ssh_key = os.path.expanduser("~/.ssh/dirty-vm")
+cmd = ["ssh", "-L", f"{local_port}:localhost:{vm_port}", "-i", ssh_key, "-N", f"{user_name}@{vm_ip}"]
 subprocess.run(cmd, check=False)
