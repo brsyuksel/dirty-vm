@@ -4,6 +4,20 @@ import os
 import sys
 import json
 import subprocess
+import platform
+
+QEMU_BIN_MAP = {
+    "amd64": "qemu-system-x86_64",
+    "arm64": "qemu-system-aarch64",
+}
+
+host_arch = platform.machine()
+ARCH = {"x86_64": "amd64", "aarch64": "arm64"}.get(host_arch)
+if ARCH is None:
+    print(f"unsupported architecture: {host_arch}")
+    sys.exit(1)
+
+QEMU_BIN = QEMU_BIN_MAP.get(ARCH)
 
 DIRTY_VM_PATH = os.path.expanduser(os.environ.get("DIRTY_VM_HOME", "~/.dirty-vm"))
 STATE_FILE = os.path.join(DIRTY_VM_PATH, "dirty-vm.json")
@@ -42,7 +56,7 @@ except:
     threads = 1
 
 qemu_cmd = [
-    "qemu-system-x86_64",
+    QEMU_BIN,
     "-enable-kvm",
     "-cpu", "host,topoext=on",
     "-smp", f"cpus={int(vm['vcpu']) * threads},sockets=1,cores={vm['vcpu']},threads={threads}",
