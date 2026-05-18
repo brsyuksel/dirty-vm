@@ -17,7 +17,8 @@ name = sys.argv[1]
 with open(STATE_FILE, "r", encoding="utf-8") as f:
     state = json.load(f)
 
-if name not in state["virtual_machines"]:
+vm = next((vm for vm in state.get("virtual_machines", []) if vm.get("name") == name), None)
+if vm is None:
     print(f"virtual machine {name} not found")
     sys.exit(1)
 

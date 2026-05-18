@@ -13,10 +13,15 @@ os.makedirs(DIRTY_VM_PATH, exist_ok=True)
 with open(CONFIG_TEMPLATE, "r", encoding="utf-8") as f:
     config = json.load(f)
 
+images = []
+for arch, arch_images in config.get("images", {}).items():
+    for name, url in arch_images.items():
+        images.append({"arch": arch, "name": name, "url": url})
+
 state = {
-    "images": config.get("images", {}),
-    "pulled_images": {},
-    "virtual_machines": {},
+    "images": images,
+    "pulled_images": [],
+    "virtual_machines": [],
     "mac": "52:54:00:00:00:00",
     "ipv4": "192.168.4.1"
 }

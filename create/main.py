@@ -89,7 +89,16 @@ with open(STATE_FILE, "r+", encoding="utf-8") as f:
     next_ip = socket.inet_ntoa(next_ip_packed)
     state["ipv4"] = next_ip
 
-    image_path = state["pulled_images"][image_name]["file_path"]
+    image_path = None
+    for img in state.get("pulled_images", []):
+        if img.get("name") == image_name:
+            image_path = img["file_path"]
+            break
+
+    if image_path is None:
+        print(f"image {image_name} not found")
+        sys.exit(1)
+
     disc_path = f"{DIRTY_VM_PATH}/discs/{name}.qcow2"
     shutil.copy(image_path, disc_path)
     qemu_img_cmd = ["qemu-img", "resize", disc_path, f"{disc_size}G"]
@@ -98,9 +107,10 @@ with open(STATE_FILE, "r+", encoding="utf-8") as f:
         sys.exit(1)
 
     if "virtual_machines" not in state:
-        state["virtual_machines"] = {}
+        state["virtual_machines"] = []
 
-    state["virtual_machines"][name] = {
+    state["virtual_machines"].append({
+        "name": name,
         "image": image_name,
         "mac": next_mac,
         "ip": next_ip,
@@ -109,13 +119,13 @@ with open(STATE_FILE, "r+", encoding="utf-8") as f:
         "vcpu": vcpu,
         "memory": mem,
         "disc_size": disc_size
-    }
+    })
     json.dump(state, f, indent=4, ensure_ascii=False)
     f.truncate()
 
 dhcp_hosts = "\n".join([
-    f"dhcp-host={v['mac']},{k},{v['ip']},infinite"
-    for k, v in state["virtual_machines"].items()
+    f"dhcp-host={v['mac']},{v['name']},{v['ip']},infinite"
+    for v in state["virtual_machines"]
 ])
 
 with open("dnsmasq.conf.tpl") as f:

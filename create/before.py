@@ -32,11 +32,11 @@ with open(STATE_FILE, "r", encoding="utf-8") as f:
     state = json.load(f)
 
 name = sys.argv[1]
-if name in state.get("virtual_machines", {}):
+if any(vm.get("name") == name for vm in state.get("virtual_machines", [])):
     print(f"virtual machine {name} already exists")
     sys.exit(1)
 
 image_name = sys.argv[2]
-if image_name not in state.get("pulled_images", {}):
+if not any(img.get("name") == image_name for img in state.get("pulled_images", [])):
     print(f"no pulled image found with name {image_name}")
     sys.exit(1)

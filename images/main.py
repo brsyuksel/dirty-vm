@@ -14,12 +14,19 @@ with open(STATE_FILE, "r", encoding="utf-8") as f:
 
 output = []
 
-for key in state.get("images", {}).get(ARCH, {}).keys():
-    output.append({
-        "name": key,
-        "downloaded": key in state.get("pulled_images", {}),
-        "size": state.get("pulled_images", {}).get(key, {}).get("size", "-")
-    })
+for img in state.get("images", []):
+    if img.get("arch") == ARCH:
+        key = img["name"]
+        size = "-"
+        for pimg in state.get("pulled_images", []):
+            if pimg.get("name") == key:
+                size = pimg.get("size", "-")
+                break
+        output.append({
+            "name": key,
+            "downloaded": any(pimg.get("name") == key for pimg in state.get("pulled_images", [])),
+            "size": size
+        })
 
 if len(output) == 0:
     sys.exit(0)
