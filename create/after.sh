@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DIRTY_VM_PATH="${DIRTY_VM_HOME:-$HOME/.dirty-vm}"
-PID_FILE="$DIRTY_VM_PATH/run/dnsmasq.pid"
+PID_FILE="$DIRTY_VM_PATH/dnsmasq.pid"
 DNSMASQ_CONF_FILE="$DIRTY_VM_PATH/dnsmasq.conf"
 
 if [ -f "$PID_FILE" ]; then

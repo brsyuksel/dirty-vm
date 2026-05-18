@@ -30,7 +30,7 @@ fi
 
 DIRTY_VM_PATH="${DIRTY_VM_HOME:-$HOME/.dirty-vm}"
 DNSMASQ_CONF_FILE="$DIRTY_VM_PATH/dnsmasq.conf"
-DNSMASQ_PID_FILE="$DIRTY_VM_PATH/run/dnsmasq.pid"
+DNSMASQ_PID_FILE="$DIRTY_VM_PATH/dnsmasq.pid"
 
 DNSMASQ_PID=$( [ -f "$DNSMASQ_PID_FILE" ] && cat "$DNSMASQ_PID_FILE" )
 if [ -z "$DNSMASQ_PID" ]; then
