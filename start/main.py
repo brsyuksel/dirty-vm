@@ -5,8 +5,8 @@ import sys
 import json
 import subprocess
 
-DIRTY_VM_PATH = os.path.expanduser("~/.dirty-vm")
-STATE_FILE = f"{DIRTY_VM_PATH}/dirty-vm.json"
+DIRTY_VM_PATH = os.path.expanduser(os.environ.get("DIRTY_VM_HOME", "~/.dirty-vm"))
+STATE_FILE = os.path.join(DIRTY_VM_PATH, "dirty-vm.json")
 
 if len(sys.argv) < 2:
     print("vm_name is required")
@@ -22,13 +22,25 @@ if vm is None:
     print(f"virtual machine {name} not found")
     sys.exit(1)
 
+vm_pid_file = os.path.join(DIRTY_VM_PATH, "run", f"{name}.pid")
+
+if os.path.exists(vm_pid_file):
+    with open(vm_pid_file, "r") as f:
+        pid = f.read().strip()
+    if pid:
+        try:
+            os.kill(int(pid), 0)
+            print(f"vm {name} is already running (pid {pid})")
+            sys.exit(1)
+        except (ValueError, ProcessLookupError, OSError):
+            pass
+
 try:
     with open("/sys/devices/system/cpu/smt/active", "r") as f:
         threads = 2 if f.read().strip() == "1" else 1
 except:
     threads = 1
 
-vm_pid_file = f"{DIRTY_VM_PATH}/run/{name}.pid"
 qemu_cmd = [
     "qemu-system-x86_64",
     "-enable-kvm",
