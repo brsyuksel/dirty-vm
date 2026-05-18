@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import os
-import json
 import shutil
 import subprocess
 
@@ -16,19 +15,7 @@ os.makedirs(os.path.join(DIRTY_VM_PATH, "cdroms"), exist_ok=True)
 os.makedirs(os.path.join(DIRTY_VM_PATH, "run"), exist_ok=True)
 
 if not os.path.exists(STATE_FILE):
-    with open(TEMPLATE, "r", encoding="utf-8") as f:
-        template = json.load(f)
-
-    state = {
-        "images": template,
-        "pulled_images": [],
-        "virtual_machines": [],
-        "mac": "52:54:00:00:00:00",
-        "ipv4": "192.168.4.1"
-    }
-
-    with open(STATE_FILE, "w", encoding="utf-8") as f:
-        json.dump(state, f, indent=4, ensure_ascii=False)
+    shutil.copy(TEMPLATE, STATE_FILE)
 
 ssh_key_path = os.path.expanduser("~/.ssh/dirty-vm")
 if not os.path.exists(ssh_key_path):
