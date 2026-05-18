@@ -11,4 +11,4 @@ if [ -f "$PID_FILE" ]; then
     fi
 fi
 
-sudo dnsmasq -C "$DNSMASQ_CONF_FILE" --pid-file="$PID_FILE"
+sudo dnsmasq -C "$DNSMASQ_CONF_FILE" --pid-file="$PID_FILE" --dhcp-leasefile="$DIRTY_VM_PATH/run/dnsmasq.leases"

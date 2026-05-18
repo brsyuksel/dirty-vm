@@ -34,11 +34,11 @@ DNSMASQ_PID_FILE="$DIRTY_VM_PATH/run/dnsmasq.pid"
 
 DNSMASQ_PID=$( [ -f "$DNSMASQ_PID_FILE" ] && cat "$DNSMASQ_PID_FILE" )
 if [ -z "$DNSMASQ_PID" ]; then
-    sudo dnsmasq -C "$DNSMASQ_CONF_FILE" --pid-file="$DNSMASQ_PID_FILE"
+    sudo dnsmasq -C "$DNSMASQ_CONF_FILE" --pid-file="$DNSMASQ_PID_FILE" --dhcp-leasefile="$DIRTY_VM_PATH/run/dnsmasq.leases"
     exit 0
 fi
 
 if [ -n "$DNSMASQ_PID" ] && ! ps -p "$DNSMASQ_PID" > /dev/null; then
-    sudo dnsmasq -C "$DNSMASQ_CONF_FILE" --pid-file="$DNSMASQ_PID_FILE"
+    sudo dnsmasq -C "$DNSMASQ_CONF_FILE" --pid-file="$DNSMASQ_PID_FILE" --dhcp-leasefile="$DIRTY_VM_PATH/run/dnsmasq.leases"
     exit 0
 fi
