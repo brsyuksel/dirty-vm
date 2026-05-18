@@ -136,7 +136,8 @@ def main():
 
     # Data Files
     print("\nData Files:")
-    dirty_vm_json = os.path.join(os.path.expanduser("~/.dirty-vm"), "dirty-vm.json")
+    DIRTY_VM_PATH = os.path.expanduser(os.environ.get("DIRTY_VM_HOME", "~/.dirty-vm"))
+    dirty_vm_json = os.path.join(DIRTY_VM_PATH, "dirty-vm.json")
     dirty_vm_json_ok = os.path.exists(dirty_vm_json)
     print_result(dirty_vm_json_ok, "dirty-vm.json", "(state database)")
     if not dirty_vm_json_ok:

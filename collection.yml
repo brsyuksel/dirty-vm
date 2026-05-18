@@ -1,6 +1,8 @@
 name: "dirty-vm"
 help: "Manages virtual machines created for dirty jobs"
 readme: "README.md"
+environments:
+  DIRTY_VM_HOME: "~/.dirty-vm"
 runnables:
   - setup
   - check
