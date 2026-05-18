@@ -37,7 +37,7 @@ qemu_cmd = [
     "-m", f"{vm['memory']}G",
     "-drive", f"file={vm['disc']},if=virtio",
     "-drive", f"file={vm['cdrom']},format=raw,if=ide,index=2,media=cdrom",
-    "-nic", f"bridge,br=virbr0,mac={vm['mac']}",
+    "-nic", f"bridge,br={os.environ.get('BRIDGE_IF_NAME', 'dirtyvmbr0')},mac={vm['mac']}",
     "-display", "none",
     "-pidfile", vm_pid_file,
     "-daemonize"

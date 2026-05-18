@@ -3,25 +3,34 @@
 import os
 import sys
 import getpass
-from string import Template
-from uuid import uuid4
+import argparse
 import tempfile
 import subprocess
 import socket
 import struct
 import json
 import shutil
+from string import Template
+from uuid import uuid4
 
-DIRTY_VM_PATH = os.path.expanduser("~/.dirty-vm")
-STATE_FILE = f"{DIRTY_VM_PATH}/dirty-vm.json"
-BRIDGE_IP = "192.168.4.1"
-QEMU_MAC_ADDR = "52:54:00:00:00:00"
+DIRTY_VM_PATH = os.path.expanduser(os.environ.get("DIRTY_VM_HOME", "~/.dirty-vm"))
+STATE_FILE = os.path.join(DIRTY_VM_PATH, "dirty-vm.json")
+BRIDGE_IF_NAME = os.environ.get("BRIDGE_IF_NAME", "dirtyvmbr0")
+DNS_UPSTREAM = os.environ.get("DNS_UPSTREAM", "1.1.1.1")
 
-if len(sys.argv) < 6:
-    print("not enough args")
-    sys.exit(1)
+parser = argparse.ArgumentParser()
+parser.add_argument("--name", required=True)
+parser.add_argument("--image-name", required=True)
+parser.add_argument("--vcpu", required=True)
+parser.add_argument("--mem", required=True)
+parser.add_argument("--disc-size", required=True)
+args = parser.parse_args()
 
-(name, image_name, vcpu, mem, disc_size) = sys.argv[1:]
+name = args.name
+image_name = args.image_name
+vcpu = args.vcpu
+mem = args.mem
+disc_size = args.disc_size
 
 user_name = getpass.getuser()
 
@@ -31,15 +40,21 @@ with open("user-data.tpl") as f:
 with open(os.path.expanduser("~/.ssh/dirty-vm.pub")) as f:
     pubkey = f.read()
 
+with open("meta-data.tpl") as f:
+    meta_data_template = f.read()
+
+with open(STATE_FILE, "r", encoding="utf-8") as f:
+    state = json.load(f)
+
+bridge_ip = state.get("ipv4", "192.168.4.1")
+base_mac = state.get("mac", "52:54:00:00:00:00")
+
 user_data_content = Template(user_data_template).substitute({
     "user": user_name,
     "pubkey": pubkey,
     "vm_name": name,
-    "host_ip": BRIDGE_IP,
+    "host_ip": bridge_ip,
 })
-
-with open("meta-data.tpl") as f:
-    meta_data_template = f.read()
 
 vm_uuid = str(uuid4())
 meta_data_content = Template(meta_data_template).substitute({
@@ -74,8 +89,8 @@ with open(STATE_FILE, "r+", encoding="utf-8") as f:
     state = json.load(f)
     f.seek(0)
 
-    last_mac = state.get("mac", QEMU_MAC_ADDR)
-    last_ip = state.get("ipv4", BRIDGE_IP)
+    last_mac = state.get("mac", base_mac)
+    last_ip = state.get("ipv4", bridge_ip)
 
     next_mac_int = int(last_mac.replace(":", ""), 16) + 1
     next_mac_hex = f"{next_mac_int:012x}"
@@ -99,11 +114,18 @@ with open(STATE_FILE, "r+", encoding="utf-8") as f:
         print(f"image {image_name} not found")
         sys.exit(1)
 
-    disc_path = f"{DIRTY_VM_PATH}/discs/{name}.qcow2"
-    shutil.copy(image_path, disc_path)
+    disc_path = os.path.join(DIRTY_VM_PATH, "discs", f"{name}.qcow2")
+    try:
+        shutil.copy(image_path, disc_path)
+    except OSError as e:
+        print(f"failed to copy image: {e}")
+        sys.exit(1)
+
     qemu_img_cmd = ["qemu-img", "resize", disc_path, f"{disc_size}G"]
     result = subprocess.run(qemu_img_cmd, check=True)
     if result.returncode != 0:
+        if os.path.exists(disc_path):
+            os.remove(disc_path)
         sys.exit(1)
 
     if "virtual_machines" not in state:
@@ -130,9 +152,11 @@ dhcp_hosts = "\n".join([
 
 with open("dnsmasq.conf.tpl") as f:
     dnsmasq_conf = Template(f.read()).substitute({
+        "interface": BRIDGE_IF_NAME,
+        "upstream": DNS_UPSTREAM,
         "dhcp_hosts": dhcp_hosts
     })
 
-dnsmasq_conf_file = f"{DIRTY_VM_PATH}/dnsmasq.conf"
+dnsmasq_conf_file = os.path.join(DIRTY_VM_PATH, "dnsmasq.conf")
 with open(dnsmasq_conf_file, "w") as f:
     f.write(dnsmasq_conf)

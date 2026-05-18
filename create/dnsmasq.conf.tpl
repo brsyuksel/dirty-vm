@@ -1,8 +1,8 @@
 # keep-in-foreground
-interface=virbr0
+interface=${interface}
 bind-interfaces
 no-resolv
-server=1.1.1.1
+server=${upstream}
 dhcp-range=192.168.4.0,static
 
 # dhcp-host=[mac],[name],[ip],infinite
