@@ -2,4 +2,4 @@ name: "images"
 help: "list distro images"
 readme: "README.md"
 run: ./main.py
-before: ./before.sh
+before: ../check/validate.sh
