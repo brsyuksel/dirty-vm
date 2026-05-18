@@ -4,15 +4,26 @@ import os
 import sys
 import json
 import subprocess
+import platform
 
-ARCH = "amd64"
+ARCH_MAP = {
+    "x86_64": "amd64",
+    "aarch64": "arm64",
+}
+
+host_arch = platform.machine()
+ARCH = ARCH_MAP.get(host_arch)
+
+if ARCH is None:
+    print(f"unsupported architecture: {host_arch}")
+    sys.exit(1)
 
 if len(sys.argv) < 2:
     sys.exit(1)
 
 image_name = sys.argv[1]
 
-DIRTY_VM_PATH = os.path.expanduser("~/.dirty-vm")
+DIRTY_VM_PATH = os.path.expanduser(os.environ.get("DIRTY_VM_HOME", "~/.dirty-vm"))
 STATE_FILE = os.path.join(DIRTY_VM_PATH, "dirty-vm.json")
 
 with open(STATE_FILE, "r", encoding="utf-8") as f:
