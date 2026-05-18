@@ -4,8 +4,8 @@ import os
 import sys
 import json
 
-DIRTY_VM_PATH = os.path.expanduser("~/.dirty-vm")
-STATE_FILE = f"{DIRTY_VM_PATH}/dirty-vm.json"
+DIRTY_VM_PATH = os.path.expanduser(os.environ.get("DIRTY_VM_HOME", "~/.dirty-vm"))
+STATE_FILE = os.path.join(DIRTY_VM_PATH, "dirty-vm.json")
 
 with open(STATE_FILE, "r", encoding="utf-8") as f:
     state = json.load(f)
