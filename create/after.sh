@@ -10,7 +10,9 @@ if [ -f "$PID_FILE" ]; then
     PID=$(cat "$PID_FILE")
     if [ -n "$PID" ] && ps -p "$PID" > /dev/null; then
         sudo kill "$PID"
+        # Only restart dnsmasq if it was already running.
+        # If start has never been run, the bridge does not exist yet
+        # and dnsmasq will fail with "unknown interface".
+        sudo dnsmasq -C "$DNSMASQ_CONF_FILE" --pid-file="$PID_FILE" --dhcp-leasefile="$DIRTY_VM_PATH/dnsmasq.leases"
     fi
 fi
-
-sudo dnsmasq -C "$DNSMASQ_CONF_FILE" --pid-file="$PID_FILE" --dhcp-leasefile="$DIRTY_VM_PATH/dnsmasq.leases"
