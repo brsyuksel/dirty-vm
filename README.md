@@ -95,6 +95,19 @@ The collection exposes these environment variables (all have sensible defaults):
 - **cloud-init**: Automatically attaches a seed ISO for user-data and SSH key injection.
 - **Unified State**: All VM, image, and network state lives in a single JSON file (`dirty-vm.json`).
 
+## QEMU Bridge ACL
+
+QEMU's bridge helper requires explicit permission to attach to a bridge interface. Before starting VMs, add your bridge name to `/etc/qemu/bridge.conf`:
+
+```bash
+# Use the same name as BRIDGE_IF_NAME (default: dirtyvmbr0)
+sudo mkdir -p /etc/qemu
+echo "allow dirtyvmbr0" | sudo tee /etc/qemu/bridge.conf
+sudo chmod 644 /etc/qemu/bridge.conf
+```
+
+If you change `BRIDGE_IF_NAME`, update the ACL file accordingly.
+
 ## Quick Start Example
 
 ```bash

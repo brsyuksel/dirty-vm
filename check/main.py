@@ -127,6 +127,23 @@ def main():
         missing_packages.append("dnsmasq-base")
     all_ok &= dnsmasq_ok
 
+    bridge_if_name = os.environ.get("BRIDGE_IF_NAME", "dirtyvmbr0")
+    qemu_acl_ok = False
+    qemu_acl_path = "/etc/qemu/bridge.conf"
+    try:
+        with open(qemu_acl_path, "r") as f:
+            for line in f:
+                parts = line.strip().split()
+                if len(parts) == 2 and parts[0] == "allow" and parts[1] == bridge_if_name:
+                    qemu_acl_ok = True
+                    break
+    except FileNotFoundError:
+        pass
+    print_result(qemu_acl_ok, "qemu bridge acl", f"({qemu_acl_path})")
+    if not qemu_acl_ok:
+        missing_system.append(f"add 'allow {bridge_if_name}' to {qemu_acl_path}")
+    all_ok &= qemu_acl_ok
+
     # Data Files
     print("\nData Files:")
     DIRTY_VM_PATH = os.path.expanduser(os.environ.get("DIRTY_VM_HOME", "~/.dirty-vm"))
