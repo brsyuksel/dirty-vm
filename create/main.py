@@ -3,7 +3,6 @@
 import os
 import sys
 import getpass
-import argparse
 import tempfile
 import subprocess
 import socket
@@ -18,19 +17,11 @@ STATE_FILE = os.path.join(DIRTY_VM_PATH, "dirty-vm.json")
 BRIDGE_IF_NAME = os.environ.get("BRIDGE_IF_NAME", "dirtyvmbr0")
 DNS_UPSTREAM = os.environ.get("DNS_UPSTREAM", "1.1.1.1")
 
-parser = argparse.ArgumentParser()
-parser.add_argument("--name", required=True)
-parser.add_argument("--image-name", required=True)
-parser.add_argument("--vcpu", required=True)
-parser.add_argument("--mem", required=True)
-parser.add_argument("--disc-size", required=True)
-args = parser.parse_args()
+if len(sys.argv) < 6:
+    print("usage: dirty-vm create <name> <image_name> <vcpu> <mem> <disc_size>")
+    sys.exit(1)
 
-name = args.name
-image_name = args.image_name
-vcpu = args.vcpu
-mem = args.mem
-disc_size = args.disc_size
+(name, image_name, vcpu, mem, disc_size) = sys.argv[1:6]
 
 user_name = getpass.getuser()
 

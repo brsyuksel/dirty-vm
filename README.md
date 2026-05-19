@@ -80,7 +80,7 @@ The collection exposes these environment variables (all have sensible defaults):
 - Check dependencies: `dirty-vm check`
 - List supported distro images: `dirty-vm images`
 - Pull an image: `dirty-vm pull <image_name>`
-- Create a VM: `dirty-vm create --name <vm_name> --image-name <image_name> --vcpu <cores> --mem <gb> --disc-size <gb>`
+- Create a VM: `dirty-vm create <name> <image_name> <vcpu> <mem> <disc_size>`
 - List VMs: `dirty-vm list`
 - Start VM: `dirty-vm start <vm_name>`
 - Stop VM: `dirty-vm stop <vm_name>`
@@ -107,7 +107,7 @@ dirty-vm check
 dirty-vm pull debian-trixie
 
 # create a new virtual machine named my-first-vm with 4 cores, 8gb ram and 40gb disc
-dirty-vm create --name my-first-vm --image-name debian-trixie --vcpu 4 --mem 8 --disc-size 40
+dirty-vm create my-first-vm debian-trixie 4 8 40
 
 # start virtual machine
 dirty-vm start my-first-vm

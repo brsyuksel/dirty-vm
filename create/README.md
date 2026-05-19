@@ -5,16 +5,16 @@ Creates a new virtual machine with a cloud-init seed ISO, a resized disc image, 
 ## Usage
 
 ```bash
-dirty-vm create --name <vm_name> --image-name <image_name> --vcpu <cores> --mem <gb> --disc-size <gb>
+dirty-vm create <name> <image_name> <vcpu> <mem> <disc_size>
 ```
 
 ## Arguments
 
-- `--name` — name of the VM (only letters, numbers, `_`, `-` allowed)
-- `--image-name` — name of a previously pulled image
-- `--vcpu` — number of virtual CPU cores
-- `--mem` — memory size in gigabytes
-- `--disc-size` — disc size in gigabytes
+- `name` — name of the VM (only letters, numbers, `_`, `-` allowed)
+- `image_name` — name of a previously pulled image
+- `vcpu` — number of virtual CPU cores
+- `mem` — memory size in gigabytes
+- `disc_size` — disc size in gigabytes
 
 ## What It Does
 
