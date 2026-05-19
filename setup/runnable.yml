@@ -1,5 +1,5 @@
 name: "setup"
-help: "creates workdir for dirty-vm, sets configuration file and creates ssh key for connections"
+help: "bootstrap dirty-vm environment and generate ssh keys"
 readme: "README.md"
 run: ./main.py
 before: type ssh-keygen

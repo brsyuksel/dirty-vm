@@ -1,5 +1,5 @@
 name: "forward"
-help: "port forward to virtual machine's port"
+help: "forward a local port to a virtual machine"
 readme: "README.md"
 run: ./main.py
 before: ../check/validate.sh

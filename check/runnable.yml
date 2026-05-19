@@ -1,4 +1,4 @@
 name: "check"
-help: "checks if required dependencies are installed"
+help: "check that all system dependencies are installed"
 readme: "README.md"
 run: ./main.py

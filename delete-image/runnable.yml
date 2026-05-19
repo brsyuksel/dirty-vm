@@ -1,5 +1,5 @@
 name: "delete-image"
-help: "deletes downloaded image"
+help: "delete a downloaded distro image"
 readme: "README.md"
 run: ./main.py
 before: ../check/validate.sh

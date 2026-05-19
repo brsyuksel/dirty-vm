@@ -1,5 +1,5 @@
 name: "list"
-help: "lists virtual machines"
+help: "list all virtual machines"
 readme: "README.md"
 run: ./main.py
 before: ../check/validate.sh
