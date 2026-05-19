@@ -1,6 +1,6 @@
 # dirty-vm
 
-> ⚠️ **Development Status:** This project is under active development. Expect bugs and breaking changes. Currently, it only supports **amd64** architecture and has been tested on **Debian** (and Debian-based distributions like Ubuntu).
+> ⚠️ **Development Status:** This project is under active development. Expect bugs and breaking changes. It supports **amd64** and **arm64** architectures and has been tested on **Debian** (and Debian-based distributions like Ubuntu).
 
 **dirty-vm** is a [shellican](https://github.com/brsyuksel/shellican) collection for managing disposable virtual machines with QEMU/KVM on Linux. It bypasses the complexity and runtime dependencies of heavy virtualization managers, providing a lightweight and efficient way to spin up VMs for dirty jobs.
 
