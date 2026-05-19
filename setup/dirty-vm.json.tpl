@@ -8,7 +8,7 @@
         {
             "arch": "amd64",
             "name": "debian-trixie",
-            "url": "https://cdimage.debian.org/images/cloud/trixie/20251117-2299/debian-13-generic-amd64-20251117-2299.qcow2"
+            "url": "https://cdimage.debian.org/images/cloud/trixie/latest/debian-13-generic-amd64.qcow2"
         }
     ],
     "pulled_images": [],
