@@ -6,7 +6,10 @@ import sys
 
 
 def check_binary(name):
-    return shutil.which(name) is not None
+    if shutil.which(name) is not None:
+        return True
+    # Debian installs some binaries in /usr/sbin, which may not be in a regular user's PATH
+    return os.path.exists(f"/usr/sbin/{name}")
 
 
 def check_module(name):
@@ -119,9 +122,9 @@ def main():
     all_ok &= iptables_ok
 
     dnsmasq_ok = check_binary("dnsmasq")
-    print_result(dnsmasq_ok, "dnsmasq", "(package: dnsmasq)")
+    print_result(dnsmasq_ok, "dnsmasq", "(package: dnsmasq-base)")
     if not dnsmasq_ok:
-        missing_packages.append("dnsmasq")
+        missing_packages.append("dnsmasq-base")
     all_ok &= dnsmasq_ok
 
     # Data Files
