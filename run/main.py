@@ -9,7 +9,7 @@ import subprocess
 DIRTY_VM_PATH = os.path.expanduser(os.environ.get("DIRTY_VM_HOME", "~/.dirty-vm"))
 STATE_FILE = os.path.join(DIRTY_VM_PATH, "dirty-vm.json")
 
-if len(sys.argv) < 4:
+if len(sys.argv) < 2:
     print("vm_name is required")
     sys.exit(1)
 
@@ -33,5 +33,5 @@ if not os.path.exists(vm_pid_file):
 
 user_name = getpass.getuser()
 ssh_key = os.path.expanduser("~/.ssh/dirty-vm")
-cmd = ["ssh", "-i", ssh_key, f"{user_name}@{vm_ip}", " ".join(sys.argv[3:])]
+cmd = ["ssh", "-i", ssh_key, f"{user_name}@{vm_ip}", " ".join(sys.argv[2:])]
 subprocess.run(cmd, check=False)
