@@ -4,25 +4,42 @@ import os
 import sys
 import json
 import subprocess
+import platform
 
-ARCH = "amd64"
+ARCH_MAP = {
+    "x86_64": "amd64",
+    "aarch64": "arm64",
+}
+
+host_arch = platform.machine()
+ARCH = ARCH_MAP.get(host_arch)
+
+if ARCH is None:
+    print(f"unsupported architecture: {host_arch}")
+    sys.exit(1)
 
 if len(sys.argv) < 2:
     sys.exit(1)
 
 image_name = sys.argv[1]
 
-dirty_vm_path = os.path.expanduser("~/.dirty-vm")
+DIRTY_VM_PATH = os.path.expanduser(os.environ.get("DIRTY_VM_HOME", "~/.dirty-vm"))
+STATE_FILE = os.path.join(DIRTY_VM_PATH, "dirty-vm.json")
 
-with open(os.path.join(dirty_vm_path, "config.json")) as f:
-    config = json.load(f)
+with open(STATE_FILE, "r", encoding="utf-8") as f:
+    state = json.load(f)
 
-if image_name not in config["images"][ARCH]:
+image_url = None
+for img in state.get("images", []):
+    if img.get("arch") == ARCH and img.get("name") == image_name:
+        image_url = img["url"]
+        break
+
+if image_url is None:
     print(f"image not found: {image_name}")
     sys.exit(1)
 
-image_url = config["images"][ARCH][image_name]
-target_file = os.path.join(dirty_vm_path, "images", f"{image_name}.img")
+target_file = os.path.join(DIRTY_VM_PATH, "images", f"{image_name}.img")
 wget_cmd = ["wget", "-O", target_file, image_url]
 result = subprocess.run(wget_cmd, check=True)
 
@@ -32,10 +49,26 @@ if result.returncode != 0:
 file_size = os.path.getsize(target_file)
 file_size_mb = file_size / (1024 * 1024)
 
-with open(os.path.join(dirty_vm_path, "images.json"), "r+", encoding="utf-8") as f:
-    images = json.load(f)
-    images[image_name] = {"file_path": target_file, "size": f"{file_size_mb:.2f} MB"}
+with open(STATE_FILE, "r+", encoding="utf-8") as f:
+    state = json.load(f)
+
+    existing = None
+    for idx, pimg in enumerate(state.get("pulled_images", [])):
+        if pimg.get("name") == image_name:
+            existing = idx
+            break
+
+    new_entry = {
+        "name": image_name,
+        "file_path": target_file,
+        "size": f"{file_size_mb:.2f} MB"
+    }
+
+    if existing is not None:
+        state["pulled_images"][existing] = new_entry
+    else:
+        state.setdefault("pulled_images", []).append(new_entry)
 
     f.seek(0)
-    json.dump(images, f, indent=4, ensure_ascii=False)
+    json.dump(state, f, indent=4, ensure_ascii=False)
     f.truncate()

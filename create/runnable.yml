@@ -1,6 +1,6 @@
 name: "create"
-help: "creates a new virtual machine"
+help: "create a new virtual machine"
 readme: "README.md"
 run: ./main.py
-before: ./before.py
+before: ./before.sh
 after: ./after.sh

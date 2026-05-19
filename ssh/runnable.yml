@@ -1,4 +1,5 @@
 name: "ssh"
-help: "ssh to virtual machine"
+help: "open an ssh session to a virtual machine"
 readme: "README.md"
 run: ./main.py
+before: ../check/validate.sh

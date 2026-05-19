@@ -1,5 +1,5 @@
 name: "start"
-help: "starts virtual machine"
+help: "start a virtual machine"
 readme: "README.md"
 run: ./main.py
 before: ./before.sh

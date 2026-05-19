@@ -4,25 +4,24 @@ import os
 import sys
 import json
 
-DIRTY_VM_PATH = os.path.expanduser("~/.dirty-vm")
+DIRTY_VM_PATH = os.path.expanduser(os.environ.get("DIRTY_VM_HOME", "~/.dirty-vm"))
+STATE_FILE = os.path.join(DIRTY_VM_PATH, "dirty-vm.json")
 
-with open(f"{DIRTY_VM_PATH}/vms.json") as f:
-    vms = json.load(f)
+with open(STATE_FILE, "r", encoding="utf-8") as f:
+    state = json.load(f)
 
-virtual_machines = vms.get("virtual_machines", {})
+virtual_machines = state.get("virtual_machines", [])
 
 output = []
 
-for key in virtual_machines.keys():
-    machine = virtual_machines[key]
-    vm = {
-        "name": key,
-        "ip": machine["ip"],
-        "vcpu": machine["vcpu"],
-        "memory": f"{machine['memory']}G",
-        "disc": f"{machine['disc_size']}G",
-    }
-    output.append(vm)
+for vm in virtual_machines:
+    output.append({
+        "name": vm["name"],
+        "ip": vm["ip"],
+        "vcpu": vm["vcpu"],
+        "memory": f"{vm['memory']}G",
+        "disc": f"{vm['disc_size']}G",
+    })
 
 if len(output) == 0:
     sys.exit(0)

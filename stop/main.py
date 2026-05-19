@@ -3,9 +3,9 @@
 import os
 import sys
 import json
-import subprocess
 
-DIRTY_VM_PATH = os.path.expanduser("~/.dirty-vm")
+DIRTY_VM_PATH = os.path.expanduser(os.environ.get("DIRTY_VM_HOME", "~/.dirty-vm"))
+STATE_FILE = os.path.join(DIRTY_VM_PATH, "dirty-vm.json")
 
 if len(sys.argv) < 2:
     print("vm_name is required")
@@ -13,14 +13,15 @@ if len(sys.argv) < 2:
 
 name = sys.argv[1]
 
-with open(f"{DIRTY_VM_PATH}/vms.json") as f:
-    vms = json.load(f)
+with open(STATE_FILE, "r", encoding="utf-8") as f:
+    state = json.load(f)
 
-if name not in vms["virtual_machines"]:
+vm = next((vm for vm in state.get("virtual_machines", []) if vm.get("name") == name), None)
+if vm is None:
     print(f"virtual machine {name} not found")
     sys.exit(1)
 
-vm_pid_file = f"{DIRTY_VM_PATH}/run/{name}.pid"
+vm_pid_file = os.path.join(DIRTY_VM_PATH, "run", f"{name}.pid")
 
 if not os.path.exists(vm_pid_file):
     print("vm is not running")
@@ -29,4 +30,10 @@ if not os.path.exists(vm_pid_file):
 with open(vm_pid_file, "r") as f:
     vm_pid = f.read().strip()
 
-subprocess.run(["kill", "-9", str(vm_pid)], check=False)
+try:
+    os.kill(int(vm_pid), 9)
+    os.remove(vm_pid_file)
+except (ValueError, ProcessLookupError, OSError):
+    os.remove(vm_pid_file)
+    print("vm is not running")
+    sys.exit(1)

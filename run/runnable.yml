@@ -1,4 +1,5 @@
 name: "run"
-help: "executes command in virtual machine"
+help: "run a command inside a virtual machine"
 readme: "README.md"
 run: ./main.py
+before: ../check/validate.sh

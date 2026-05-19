@@ -3,25 +3,41 @@
 import os
 import sys
 import json
+import platform
 
-ARCH = "amd64"
+ARCH_MAP = {
+    "x86_64": "amd64",
+    "aarch64": "arm64",
+}
 
-dirty_vm_path = os.path.expanduser("~/.dirty-vm")
+host_arch = platform.machine()
+ARCH = ARCH_MAP.get(host_arch)
 
-with open(os.path.join(dirty_vm_path, "config.json")) as f:
-    config = json.load(f)
+if ARCH is None:
+    print(f"unsupported architecture: {host_arch}")
+    sys.exit(1)
 
-with open(os.path.join(dirty_vm_path, "images.json")) as f:
-    images = json.load(f)
+DIRTY_VM_PATH = os.path.expanduser(os.environ.get("DIRTY_VM_HOME", "~/.dirty-vm"))
+STATE_FILE = os.path.join(DIRTY_VM_PATH, "dirty-vm.json")
+
+with open(STATE_FILE, "r", encoding="utf-8") as f:
+    state = json.load(f)
 
 output = []
 
-for key in config["images"][ARCH].keys():
-    output.append({
-        "name": key,
-        "downloaded": key in images,
-        "size": images.get(key, {}).get("size", "-")
-    })
+for img in state.get("images", []):
+    if img.get("arch") == ARCH:
+        key = img["name"]
+        size = "-"
+        for pimg in state.get("pulled_images", []):
+            if pimg.get("name") == key:
+                size = pimg.get("size", "-")
+                break
+        output.append({
+            "name": key,
+            "downloaded": any(pimg.get("name") == key for pimg in state.get("pulled_images", [])),
+            "size": size
+        })
 
 if len(output) == 0:
     sys.exit(0)

@@ -1,4 +1,5 @@
 name: "stop"
-help: "stops virtual machine"
+help: "stop a virtual machine"
 readme: "README.md"
 run: ./main.py
+before: ../check/validate.sh

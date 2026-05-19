@@ -1,16 +1,18 @@
 #!/bin/bash
 
-PID_FILE="$HOME/.dirty-vm/run/dnsmasq.pid"
+DIRTY_VM_PATH="${DIRTY_VM_HOME:-$HOME/.dirty-vm}"
+# collection.yml sets DIRTY_VM_HOME to "~/.dirty-vm" literally; bash does not expand ~ in variables
+DIRTY_VM_PATH="${DIRTY_VM_PATH/#\~/$HOME}"
+PID_FILE="$DIRTY_VM_PATH/dnsmasq.pid"
+DNSMASQ_CONF_FILE="$DIRTY_VM_PATH/dnsmasq.conf"
 
-if [ ! -f "$PID_FILE" ]; then
-    exit 0
-fi
-
-PID=$(cat "$PID_FILE")
-if [ -z "$PID" ]; then
-    exit 0
-fi
-
-if ps -p "$PID" > /dev/null; then
-    sudo kill -HUP "$PID"
+if [ -f "$PID_FILE" ]; then
+    PID=$(cat "$PID_FILE")
+    if [ -n "$PID" ] && ps -p "$PID" > /dev/null; then
+        sudo kill "$PID"
+        # Only restart dnsmasq if it was already running.
+        # If start has never been run, the bridge does not exist yet
+        # and dnsmasq will fail with "unknown interface".
+        sudo dnsmasq -C "$DNSMASQ_CONF_FILE" --pid-file="$PID_FILE" --dhcp-leasefile="$DIRTY_VM_PATH/dnsmasq.leases"
+    fi
 fi
