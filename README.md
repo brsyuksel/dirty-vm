@@ -106,6 +106,12 @@ echo "allow dirtyvmbr0" | sudo tee /etc/qemu/bridge.conf
 sudo chmod 644 /etc/qemu/bridge.conf
 ```
 
+You also need to ensure QEMU's bridge helper has the setuid bit so it can create TUN devices:
+
+```bash
+sudo chmod u+s /usr/lib/qemu/qemu-bridge-helper
+```
+
 If you change `BRIDGE_IF_NAME`, update the ACL file accordingly.
 
 ## Quick Start Example
