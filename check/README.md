@@ -11,7 +11,7 @@ dirty-vm check
 ## What It Checks
 
 - **Virtualization**: `qemu-system-x86_64`, `qemu-img`, `/dev/kvm` access, KVM kernel modules
-- **Networking**: `brctl`, `iptables`, `dnsmasq`, `virbr0` bridge interface
+- **Networking**: `brctl`, `iptables`, `dnsmasq`
 - **Data Files**: `dirty-vm.json` state database exists in `~/.dirty-vm/`
 - **Utilities**: `mkisofs`, `wget`, `ssh`, `ssh-keygen`
 

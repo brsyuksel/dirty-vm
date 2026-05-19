@@ -41,10 +41,6 @@ def get_cpu_vendor():
     return None
 
 
-def check_bridge(ifname):
-    return os.path.exists(f"/sys/class/net/{ifname}")
-
-
 def print_result(ok, label, detail=""):
     status = "[OK]" if ok else "[MISSING]"
     print(f"  {status:<10} {label:<22} {detail}")
@@ -127,13 +123,6 @@ def main():
     if not dnsmasq_ok:
         missing_packages.append("dnsmasq")
     all_ok &= dnsmasq_ok
-
-    bridge_if_name = os.environ.get("BRIDGE_IF_NAME", "dirtyvmbr0")
-    bridge_ok = check_bridge(bridge_if_name)
-    print_result(bridge_ok, f"{bridge_if_name} interface", "(bridge interface)")
-    if not bridge_ok:
-        missing_system.append(f"{bridge_if_name} bridge (created by start)")
-    all_ok &= bridge_ok
 
     # Data Files
     print("\nData Files:")
