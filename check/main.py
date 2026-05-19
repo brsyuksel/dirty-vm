@@ -2,6 +2,7 @@
 
 import os
 import shutil
+import stat
 import sys
 
 
@@ -77,6 +78,16 @@ def main():
     if not kvm_dev_ok:
         missing_system.append("/dev/kvm access")
     all_ok &= kvm_dev_ok
+
+    bridge_helper = "/usr/lib/qemu/qemu-bridge-helper"
+    bridge_helper_suid = False
+    if os.path.exists(bridge_helper):
+        mode = os.stat(bridge_helper).st_mode
+        bridge_helper_suid = bool(mode & stat.S_ISUID)
+    print_result(bridge_helper_suid, "qemu-bridge-helper", f"({bridge_helper})")
+    if not bridge_helper_suid:
+        missing_system.append(f"sudo chmod u+s {bridge_helper}")
+    all_ok &= bridge_helper_suid
 
     kvm_mod_ok = check_module("kvm")
     print_result(kvm_mod_ok, "kvm module", "(kernel module loaded)")
