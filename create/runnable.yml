@@ -2,5 +2,5 @@ name: "create"
 help: "create a new virtual machine"
 readme: "README.md"
 run: ./main.py
-before: ../check/validate.sh
+before: ../check/validate.sh && ./before.py
 after: ./after.sh
