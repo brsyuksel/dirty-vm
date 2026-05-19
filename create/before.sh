@@ -19,8 +19,8 @@ if ! echo "$NAME" | grep -qE '^[a-zA-Z0-9_-]+$'; then
 fi
 
 python3 -c "
-import json, sys
-state = json.load(open('$STATE_FILE'))
+import json, sys, os
+state = json.load(open(os.path.expanduser('$STATE_FILE')))
 if any(vm.get('name') == '$NAME' for vm in state.get('virtual_machines', [])):
     print(f'virtual machine $NAME already exists')
     sys.exit(1)
